@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 0cd863cd60942c0469a65039b2f144f9
+DefaultImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 147044
+  packageName: Basic Platformer Template
+  packageVersion: 1.1
+  assetPath: Assets/Basic Platformer Template/Scenes/TemplateScene.unity
+  uploadId: 518749

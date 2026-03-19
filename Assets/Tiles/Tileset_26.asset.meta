@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 6336b7036db3ee44893b581a8ee48875
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 147044
+  packageName: Basic Platformer Template
+  packageVersion: 1.1
+  assetPath: Assets/Basic Platformer Template/Tiles/Tileset_26.asset
+  uploadId: 518749
