@@ -1,15 +1,27 @@
 ﻿using Core.Events;
 using Core.Events.EventInterfaces;
+using Input.InputInterface;
+using Input.Manager;
+using MVC.Controller.Interfaces;
 using MVC.Controller.Manager;
+using UnityEngine;
 
 namespace Core.Architecture
 {
-    public class CoreInstaller:IInstaller
+    [CreateAssetMenu(fileName = "CoreInstaller", menuName = "Boot/CoreInstaller")]
+    public class CoreInstaller:InstallerAsset
     {
-        public void Register(DI.DIContainer container)
+        public override void Register(DI.DIContainer container)
         {
             container.RegisterSingleton<IEventCenter>(new EventManager());
-            container.RegisterSingleton(new ControllerManager());
+            container.RegisterSingleton<IPlayerInput>(sp =>
+            {
+                var go = new GameObject("PlayerInputManager");
+                Object.DontDestroyOnLoad(go);
+                var mgr = go.AddComponent<PlayerInputManager>();
+                mgr.Initialize();
+                return mgr;
+            });
         }
     }
 }

@@ -1,14 +1,21 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using Core.Architecture;
 using MVC.Controller.Interfaces;
 namespace MVC.Controller.Manager
 {
-    public class ControllerManager
+    public class ControllerManager:IControllerManager,IStartable,IDisposable
     {
-        private readonly List<IController> _controllers = new();
+        public List<IController> _controllers { get; }
         public void Add(IController controller)
         {
             _controllers.Add(controller);
             controller.Bind();
+        }
+
+        public ControllerManager(List<IController> controllers)
+        {
+            _controllers =controllers;
         }
         
         public void Remove(IController controller)
@@ -23,10 +30,23 @@ namespace MVC.Controller.Manager
             _controllers.Clear();
         }
 
+        public void OnStart()
+        {
+            foreach (var c in _controllers)
+            {
+                c.Bind();
+            }
+        }
+
         public void Tick(float dt)
         {
             foreach (var c in _controllers)
                 c.Tick(dt);
+        }
+
+        public void Dispose()
+        {
+            Shutdown();
         }
     }
 }

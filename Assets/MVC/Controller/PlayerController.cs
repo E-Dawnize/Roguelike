@@ -48,9 +48,11 @@ namespace MVC.Controller
         {
             Model.Changed -= OnPlayerHpChanged;
             _input.OnAttackPerformed -= OnAttack;
+            _input.OnMovePerformed -= OnPlayerMovePerformed;
+            _input.OnMoveCanceled -= OnPlayerMoveCanceled;
         }
 
-        PlayerController(EntityModel model, IEventCenter eventCenter, IPlayerInput input,IEcsInputBridge bridge) : base(model, eventCenter)
+        public PlayerController(EntityModel model, IEventCenter eventCenter, IPlayerInput input,IEcsInputBridge bridge) : base(model, eventCenter)
         {
             _input = input;
             _ecsInputBridge = bridge;

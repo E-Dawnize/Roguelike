@@ -1,12 +1,14 @@
 ﻿using Bridge;
+using UnityEngine;
 
 namespace Core.Architecture
 {
-    public class EcsInstaller:IInstaller
+    [CreateAssetMenu(fileName = "EcsInstaller", menuName = "Boot/EcsInstaller")]
+    public class EcsInstaller:InstallerAsset
     {
-        public void Register(DI.DIContainer container)
+        public override void Register(DI.DIContainer container)
         {
-            var bridge=new EcsInputBridge();
+            
         }
     }
 }

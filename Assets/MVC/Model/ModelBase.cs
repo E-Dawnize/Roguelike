@@ -18,5 +18,4 @@
         public event Action<ModelChanged> Changed;
         protected void NotifyChanged(ModelChanged evt) => Changed?.Invoke(evt);
     }
-    
 }

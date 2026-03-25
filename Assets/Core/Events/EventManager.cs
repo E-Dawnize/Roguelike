@@ -14,9 +14,9 @@ namespace Core.Events
         public void Subscribe<T>(Action<T> handler) where T : struct
         {
             Type type = typeof(T);
-            if (!_eventHandlers.ContainsKey(type))
+            if (_eventHandlers.TryGetValue(type, out var existing))
             {
-                _eventHandlers.Add(type, Delegate.Combine(_eventHandlers[type], handler));
+                _eventHandlers[type] = Delegate.Combine(existing, handler);
             }
             else
             {

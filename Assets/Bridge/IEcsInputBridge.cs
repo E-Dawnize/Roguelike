@@ -1,5 +1,6 @@
 ﻿using ECS.Component;
 using ECS.Component.SingletonComponent;
+using ECS.Component.Tags;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.Transforms;

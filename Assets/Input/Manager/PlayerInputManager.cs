@@ -1,5 +1,6 @@
 ﻿using Core.Tools;
 using System;
+using Core.Architecture;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Input.InputInterface;
@@ -9,7 +10,7 @@ namespace Input.Manager
     /// <summary>
     /// 玩家输入系统实现，唯一输入入口
     /// </summary>
-    public class PlayerInputManager:MonoBehaviour,IPlayerInput
+    public class PlayerInputManager:MonoBehaviour,IPlayerInput,IInitializable
     {
         public event Action OnAttackPerformed;
         public event Action OnAttackCanceled;
