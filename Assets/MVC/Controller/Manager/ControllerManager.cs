@@ -15,7 +15,11 @@ namespace MVC.Controller.Manager
 
         public ControllerManager(List<IController> controllers)
         {
-            _controllers =controllers;
+            _controllers = new();
+            foreach (var controller in controllers)
+            {
+                _controllers.Add(controller);
+            }
         }
         
         public void Remove(IController controller)

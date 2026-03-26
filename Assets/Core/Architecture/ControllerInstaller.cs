@@ -13,6 +13,8 @@ namespace Core.Architecture
         public override void Register(DIContainer container)
         {
             container.RegisterScoped<IControllerManager, ControllerManager>();
+
+            
             container.RegisterScoped<IStartable, ControllerManager>();
             container.RegisterScoped<IController, PlayerController>();
             container.RegisterScoped<IEcsInputBridge, EcsInputBridge>();
