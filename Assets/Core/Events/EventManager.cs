@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Core.Events
 {
-    public class EventManager:IEventCenter
+    public class EventManager:IEventCenter,IDisposable
     {
         //type为事件结构体
         private readonly Dictionary<Type, Delegate> _eventHandlers = new Dictionary<Type, Delegate>();
@@ -46,6 +46,11 @@ namespace Core.Events
             {
                 (handler as Action<T>)?.Invoke(message);
             }
+        }
+
+        public void Dispose()
+        {
+            _eventHandlers.Clear();
         }
     }
 }

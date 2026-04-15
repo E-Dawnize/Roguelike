@@ -16,5 +16,11 @@ namespace Core.Boot
             if (!Application.isPlaying) return;
             ProjectContext.Ensure();
         }
+
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+        private static void SceneBuild()
+        {
+            
+        }
     }
 }

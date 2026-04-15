@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Core.Architecture.Interfaces;
 using Core.Tools;
 using JetBrains.Annotations;
 
@@ -73,7 +74,7 @@ namespace Core.DI
              childContainer._parentContainer = this;
              return childContainer;
          }
-        public T GetRequiredService<T>(IScope scope = null) => (T)GetRequiredService(typeof(T),scope);
+        public object GetRequiredService<T>(IScope scope = null) => GetRequiredService(typeof(T),scope);
 
         private object GetRequiredService(Type t, IScope scope = null)
         {
@@ -112,7 +113,7 @@ namespace Core.DI
         #region 服务解析接口
 
         [CanBeNull]
-        public T? GetService<T>() => (T?)ResolveService(typeof(T),null);
+        public T? GetService<T>(IScope scope=null) => (T?)ResolveService(typeof(T),scope as Scope);
         public object GetService(Type serviceType)=>ResolveService(serviceType,null);
         public IEnumerable<T> ResolveAll<T>(IScope scope = null)
         {
@@ -218,14 +219,18 @@ namespace Core.DI
         private object ResolveScope(ServiceDescriptor descriptor,Scope scope)
         {
             if (scope == null) throw new InvalidOperationException("Scoped service requires a scope.");
-            if (scope.ScopedInstances.TryGetValue(descriptor.Id, out var instance))
-            {
-                return instance;
+            Scope currentScope = scope;
+            object instance;
+            while(currentScope!=null){    
+                if (scope.ScopedInstances.TryGetValue(descriptor.Id, out instance))
+                {
+                    return instance;
+                }
+                currentScope = currentScope._parent;
             }
             instance = CreateInstance(descriptor, scope);
             scope.ScopedInstances[descriptor.Id] = instance;
             if(instance is IDisposable disposable) scope.Disposables.Add(disposable);
-            
             return instance;
         }
 
@@ -275,7 +280,13 @@ namespace Core.DI
                 paramValues[i] = val;
             }
             
-            return ctor.Invoke(paramValues);
+            var instance=ctor.Invoke(paramValues);
+            Inject(instance, scope);
+            if (instance is IInitializable initializable)
+            {
+                initializable.Initialize();
+            }
+            return instance;
         }
 
         private bool TryResolveEnumerable(Type paramType, Scope scope, out object value)
@@ -346,21 +357,19 @@ namespace Core.DI
         
         #region 作用域实现
 
-        public IScope CreateScope()
+        public IScope CreateScope(IScope parentScope = null)=>new Scope(this,parentScope as Scope);
+        internal class Scope:IScope
         {
-            var scope=new Scope(this);
-            return scope;
-        }
-        private class Scope:IScope
-        {
-            private DIContainer Container { get; }
+            private readonly DIContainer _container;
+            public readonly Scope _parent;
             public ConcurrentDictionary<int, object> ScopedInstances { get; } = new();
             public ConcurrentBag<IDisposable> Disposables { get; } = new();
             public IServiceProvider ServiceProvider { get; }
             private bool _disposed;
-            public Scope(DIContainer container)
+            public Scope(DIContainer container,Scope parent=null)
             {
-                Container = container;
+                _container = container;
+                _parent=parent;
                 ServiceProvider=new ScopedServiceProvider(this);
             }
             public void Dispose()
@@ -379,7 +388,8 @@ namespace Core.DI
             {
                 private readonly Scope _scope;
                 public ScopedServiceProvider(Scope scope) => _scope = scope;
-                public object? GetService(Type serviceType) => _scope.Container.ResolveService(serviceType, _scope);
+
+                public object? GetService(Type serviceType) => _scope._container.ResolveService(serviceType, _scope);
             }
         }
 

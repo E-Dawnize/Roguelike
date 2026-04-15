@@ -1,4 +1,6 @@
-﻿namespace Core.Architecture
+﻿using Core.Architecture.Interfaces;
+
+namespace Core.Architecture
 {
     using UnityEngine;
     public class InstallerAsset : ScriptableObject, IInstaller

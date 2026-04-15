@@ -1,4 +1,5 @@
 ﻿using Core.Architecture;
+using Core.Architecture.Interfaces;
 using Core.DI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,7 +9,7 @@ namespace Core.Boot
     public class SceneScopeRunner:MonoBehaviour
     {
         private InstallerConfig _config;
-        private DI.IScope _scope;
+        private IScope _scope;
         private DIContainer _globalContainer;
         public static void Attach(InstallerConfig config,DIContainer globalContainer)
         {
